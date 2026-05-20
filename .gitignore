@@ -1,31 +1,22 @@
-# Maven
 target/
 test/
-docker/
 *.jar
 *.war
 
-
-# IDE
 .idea/
 *.iml
 .vscode/
 *.class
 
-# Секреты — НИКОГДА не коммитить!
 .env
 .env.example
 *.env.local
 
-# Загружаемые файлы
 uploads/
 test-uploads/
-download_font.py
 
-# Логи
 *.log
 logs/
 
-# OS
 .DS_Store
 Thumbs.db
