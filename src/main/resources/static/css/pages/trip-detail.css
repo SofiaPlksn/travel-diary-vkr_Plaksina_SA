@@ -1,0 +1,592 @@
+/* Страница детали поездки */
+/* Шапка поездки */
+.trip-header {
+  position: relative;
+  min-height: 240px;
+  background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 50%, #7c3aed 100%);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.trip-header__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, .6) 0%, transparent 55%);
+}
+.trip-header__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: var(--space-6);
+}
+.back-link {
+  color: rgba(255, 255, 255, .8);
+  font-size: var(--text-sm);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+}
+.back-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, .15);
+}
+/* Кнопки на тёмном фоне шапки — белый текст */
+.trip-header__content .btn-ghost {
+  color: rgba(255, 255, 255, .9);
+}
+.trip-header__content .btn-ghost:hover {
+  background: rgba(255, 255, 255, .15);
+  color: #fff;
+}
+.trip-header__title {
+  color: #fff;
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-2);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, .3);
+  letter-spacing: -.02em;
+}
+.trip-header__meta {
+  color: rgba(255, 255, 255, .75);
+  font-size: var(--text-sm);
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+/* Быстрая статистика */
+.trip-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+.trip-stat {
+  padding: var(--space-4);
+  text-align: center;
+  border-right: 1px solid var(--color-border);
+}
+.trip-stat:last-child {
+  border-right: none;
+}
+.trip-stat__value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+}
+.trip-stat__label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+/* Вкладки */
+.detail-tabs-wrapper {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 var(--space-6);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.detail-tabs {
+  border-bottom: none;
+}
+.tab-panel {
+  display: none;
+}
+.tab-panel.active {
+  display: block;
+  animation: fadeIn .2s ease;
+}
+/* Строка над содержимым вкладки */
+.panel-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.panel-actions h3 {
+  margin: 0;
+}
+/* Карта */
+.trip-map {
+  width: 100%;
+  height: 480px;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+.map-legend {
+  margin-top: var(--space-3);
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+/* Тулбар карты */
+.map-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0 var(--space-2);
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+}
+.map-toolbar__hint {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  font-weight: var(--font-medium);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+/* Сетка медиа */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+.media-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--color-border-light);
+}
+.media-item__video-thumb {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.media-item__video-badge {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background: rgba(0, 0, 0, .6);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(4px);
+  z-index: 2;
+}
+.media-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+.media-item:hover img {
+  transform: scale(1.06);
+}
+.media-item__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 12, 41, .55);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition);
+  gap: var(--space-2);
+}
+.media-item:hover .media-item__overlay {
+  opacity: 1;
+}
+.media-item__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+.media-item__btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, .18);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+  transition: background var(--transition);
+  border: 1px solid rgba(255, 255, 255, .2);
+}
+.media-item__btn:hover {
+  background: rgba(255, 255, 255, .32);
+}
+.media-item__caption {
+  color: #fff;
+  font-size: var(--text-xs);
+  text-align: center;
+  padding: 0 var(--space-2);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* EXIF бейдж */
+.media-item__exif {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  background: rgba(0, 0, 0, .5);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(4px);
+}
+/* Прогресс загрузки */
+.upload-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.upload-progress__bar {
+  flex: 1;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.upload-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: var(--radius-full);
+  transition: width .3s ease;
+  width: 0%;
+}
+/* Список мест */
+.place-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  margin-bottom: var(--space-3);
+  transition: all var(--transition);
+}
+.place-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.place-item__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-xl);
+  background: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.place-item__info {
+  flex: 1;
+  min-width: 0;
+}
+.place-item__name {
+  font-weight: var(--font-semibold);
+  margin-bottom: 2px;
+}
+.place-item__address {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-1);
+}
+.place-item__note {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+.place-item__actions {
+  display: flex;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+/* Звёздный рейтинг */
+.star-rating {
+  display: flex;
+  gap: 2px;
+}
+.star {
+  font-size: 1.3rem;
+  color: var(--color-border);
+  transition: color var(--transition);
+  line-height: 1;
+  cursor: pointer;
+}
+.star.active, .star.hovered {
+  color: #f59e0b;
+}
+/* Записи дневника */
+.journal-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  margin-bottom: var(--space-4);
+  overflow: hidden;
+  transition: all var(--transition);
+}
+.journal-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.journal-item__header {
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--color-border-light);
+}
+.journal-item__mood {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.journal-item__title {
+  flex: 1;
+  font-weight: var(--font-semibold);
+  font-size: var(--text-base);
+}
+.journal-item__date {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.journal-item__body {
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.journal-item__body.expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+.journal-item__footer {
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--color-border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* Виджет погоды */
+.weather-widget {
+  background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 60%, #7c3aed 100%);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  color: #fff;
+  margin-bottom: var(--space-6);
+  box-shadow: var(--shadow-primary);
+}
+.weather-widget__location {
+  font-size: var(--text-sm);
+  opacity: .75;
+  margin-bottom: var(--space-2);
+}
+.weather-widget__summary {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-4);
+}
+.weather-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-2);
+}
+.weather-day {
+  background: rgba(255, 255, 255, .12);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, .1);
+}
+.weather-day__name {
+  font-size: 10px;
+  opacity: .75;
+  margin-bottom: var(--space-1);
+}
+.weather-day__icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-1);
+}
+.weather-day__temp {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+}
+.weather-day__min {
+  font-size: 10px;
+  opacity: .65;
+}
+.packing-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+.packing-section__title {
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.packing-section ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.packing-section li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.packing-section li::before {
+  content: '•';
+  color: var(--color-primary);
+  font-weight: bold;
+}
+/* Панель поиска города */
+.weather-city-bar {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface-2);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-border);
+}
+.weather-city-search {
+  position: relative;
+  flex: 1;
+}
+.weather-city-bar .btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+/* Просмотрщик медиа */
+.media-viewer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+}
+.media-viewer__img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: var(--radius-xl);
+  object-fit: contain;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, .4);
+}
+.media-viewer__close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  color: #fff;
+  font-size: var(--text-xl);
+  padding: var(--space-2);
+  background: rgba(255, 255, 255, .12);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(4px);
+}
+.media-viewer__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 2.5rem;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(0, 0, 0, .32);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius-xl);
+  transition: background var(--transition);
+  line-height: 1;
+}
+.media-viewer__nav:hover {
+  background: rgba(0, 0, 0, .55);
+}
+.media-viewer__nav.prev {
+  left: -64px;
+}
+.media-viewer__nav.next {
+  right: -64px;
+}
+.media-viewer__caption {
+  position: absolute;
+  bottom: -36px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, .75);
+  font-size: var(--text-sm);
+}
+/* Share link wrapper */
+.share-link-wrapper {
+  display: flex;
+  gap: var(--space-2);
+}
+.share-link-wrapper .form-input {
+  flex: 1;
+}
+/* Временный маркер на карте */
+.map-pin-temp {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .4));
+  animation: pin-drop .3s cubic-bezier(.17, .67, .35, 1.3);
+  cursor: default;
+}
+@keyframes pin-drop {
+  from {
+    transform: translateY(-20px) scale(1.3);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+/* Адаптив */
+@media (max-width: 768px) {
+  .trip-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .weather-days {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .packing-list {
+    grid-template-columns: 1fr;
+  }
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .weather-city-bar {
+    flex-direction: column;
+  }
+  .weather-city-bar .btn {
+    width: 100%;
+  }
+  .media-viewer__nav.prev {
+    left: 4px;
+  }
+  .media-viewer__nav.next {
+    right: 4px;
+  }
+}

@@ -1,0 +1,274 @@
+/* Профиль */
+/* Шапка профиля */
+.profile-hero {
+  position: relative;
+  overflow: hidden;
+}
+.profile-hero__bg {
+  position: absolute;
+  inset: 0;
+  height: 90px;
+  background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 60%, #7c3aed 100%);
+}
+.profile-hero__content {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-6);
+  padding-top: 52px;
+}
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  border: 4px solid var(--color-surface);
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  position: relative;
+  transition: transform var(--transition);
+}
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+.profile-avatar:hover::after {
+  content: '📸';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #fff;
+}
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-info {
+  flex: 1;
+  padding-bottom: 4px;
+}
+.profile-info h2 {
+  color: #fff;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+}
+/* Сетка метрик */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5);
+  text-align: center;
+  transition: all var(--transition);
+}
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.stat-card__icon {
+  font-size: 1.8rem;
+  margin-bottom: var(--space-2);
+}
+.stat-card__value {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+  line-height: 1;
+  margin-bottom: var(--space-1);
+}
+.stat-card__label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+/* Топ стран */
+.country-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.country-bar__name {
+  width: 140px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  flex-shrink: 0;
+}
+.country-bar__track {
+  flex: 1;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.country-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: var(--radius-full);
+  transition: width .6s ease;
+}
+.country-bar__count {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  width: 60px;
+  text-align: right;
+  flex-shrink: 0;
+}
+/* Достижения */
+.achievements-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+.achievement-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5);
+  text-align: center;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.achievement-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.achievement-card.unlocked {
+  border-color: #fbbf24;
+  background: linear-gradient(145deg, #fffbeb, #ffffff);
+}
+.achievement-card.unlocked::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, rgba(251, 191, 36, .07), transparent);
+  pointer-events: none;
+}
+.achievement-card.locked {
+  opacity: .55;
+  filter: grayscale(.7);
+}
+.achievement-card__emoji {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-3);
+  display: block;
+}
+.achievement-card__title {
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-1);
+}
+.achievement-card__desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-bottom: var(--space-3);
+}
+.achievement-progress {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-1);
+}
+.achievement-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  border-radius: var(--radius-full);
+  transition: width .6s ease;
+}
+.achievement-progress__label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+.achievement-card__date {
+  font-size: 10px;
+  color: #d97706;
+  font-weight: var(--font-medium);
+}
+/* Сетка стран */
+.countries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+.country-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  transition: all var(--transition);
+}
+.country-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.country-card__flag {
+  font-size: 1.8rem;
+}
+.country-card__name {
+  font-weight: var(--font-medium);
+  font-size: var(--text-sm);
+}
+.country-card__count {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.settings-section {
+  margin-bottom: var(--space-4);
+}
+.settings-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.settings-action-btn svg {
+  flex-shrink: 0;
+}
+.settings-danger {
+  border-color: rgba(239, 68, 68, .28);
+}
+.settings-danger .card-header {
+  background: var(--color-danger-light);
+  color: #991b1b;
+}
+/* Адаптив */
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .profile-hero__content {
+    flex-wrap: wrap;
+  }
+}

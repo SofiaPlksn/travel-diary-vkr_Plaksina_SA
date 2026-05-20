@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelDiary — Войти</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/pages/auth.css" />
+  </head>
+  <body class="auth-page">
+    <!-- Левая панель — иллюстрация -->
+    <div class="auth-hero">
+      <div class="auth-hero__content">
+        <div class="auth-hero__logo">🗺️</div>
+        <h1 class="auth-hero__title">TravelDiary</h1>
+        <p class="auth-hero__subtitle">
+          Храните воспоминания о каждом путешествии.<br />
+          Места, медиафайлы, дневники — всё в одном месте.
+        </p>
+        <div class="auth-hero__features">
+          <div class="auth-hero__feature">
+            <span>📍</span> Отмечайте места на карте
+          </div>
+          <div class="auth-hero__feature">
+            <span>📸</span> Медиагалерея с EXIF-данными
+          </div>
+          <div class="auth-hero__feature">
+            <span>🌤️</span> Прогноз погоды и список вещей
+          </div>
+          <div class="auth-hero__feature">
+            <span>🏆</span> Достижения и статистика
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-panel">
+      <div class="auth-form-wrapper">
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabLogin">Войти</button>
+          <button class="auth-tab" id="tabRegister">Регистрация</button>
+        </div>
+
+        <form id="loginForm" class="auth-form" novalidate>
+          <h2 class="auth-form__title">С возвращением!</h2>
+          <p class="auth-form__subtitle">Войдите в свой аккаунт</p>
+
+          <div class="form-group mt-6">
+            <label class="form-label" for="loginEmail">Email</label>
+            <input
+              type="email"
+              id="loginEmail"
+              class="form-input"
+              placeholder="ivan@example.com"
+              autocomplete="email"
+              required
+            />
+            <span class="form-error" id="loginEmailError"></span>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label" for="loginPassword">Пароль</label>
+            <div class="input-password-wrapper">
+              <input
+                type="password"
+                id="loginPassword"
+                class="form-input"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                data-target="loginPassword"
+              >
+                👁
+              </button>
+            </div>
+            <span class="form-error" id="loginPasswordError"></span>
+          </div>
+
+          <div class="flex justify-between items-center mt-2">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe" /> Запомнить меня
+            </label>
+            <a href="#" id="forgotPasswordLink" class="text-sm"
+              >Забыли пароль?</a
+            >
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg mt-6"
+            id="loginBtn"
+            style="width: 100%"
+          >
+            Войти
+          </button>
+
+          <div id="loginError" class="auth-error" style="display: none"></div>
+        </form>
+
+        <form
+          id="registerForm"
+          class="auth-form"
+          style="display: none"
+          novalidate
+        >
+          <h2 class="auth-form__title">Создать аккаунт</h2>
+          <p class="auth-form__subtitle">Начните вести дневник путешествий</p>
+
+          <div class="form-group mt-6">
+            <label class="form-label" for="regName">Имя</label>
+            <input
+              type="text"
+              id="regName"
+              class="form-input"
+              placeholder="Иван Петров"
+              autocomplete="name"
+              required
+            />
+            <span class="form-error" id="regNameError"></span>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label" for="regEmail">Email</label>
+            <input
+              type="email"
+              id="regEmail"
+              class="form-input"
+              placeholder="ivan@example.com"
+              autocomplete="email"
+              required
+            />
+            <span class="form-error" id="regEmailError"></span>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label" for="regPassword">Пароль</label>
+            <div class="input-password-wrapper">
+              <input
+                type="password"
+                id="regPassword"
+                class="form-input"
+                placeholder="Минимум 8 символов"
+                autocomplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                data-target="regPassword"
+              >
+                👁
+              </button>
+            </div>
+
+            <div
+              class="password-strength mt-2"
+              id="passwordStrength"
+              style="display: none"
+            >
+              <div class="password-strength__bar">
+                <div class="password-strength__fill" id="strengthFill"></div>
+              </div>
+              <span class="password-strength__label" id="strengthLabel"></span>
+            </div>
+            <span class="form-error" id="regPasswordError"></span>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label" for="regPasswordConfirm"
+              >Повторите пароль</label
+            >
+            <input
+              type="password"
+              id="regPasswordConfirm"
+              class="form-input"
+              placeholder="••••••••"
+              autocomplete="new-password"
+              required
+            />
+            <span class="form-error" id="regPasswordConfirmError"></span>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg mt-6"
+            id="registerBtn"
+            style="width: 100%"
+          >
+            Создать аккаунт
+          </button>
+
+          <div
+            id="registerError"
+            class="auth-error"
+            style="display: none"
+          ></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Модалка сброса пароля -->
+    <div class="modal-overlay" id="forgotModal">
+      <div class="modal" style="max-width: 420px">
+        <div class="modal-header">
+          <h3>Сброс пароля</h3>
+          <button class="btn-ghost btn-icon" id="closeForgotModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="text-secondary text-sm mb-4">
+            Введите email — мы отправим ссылку для восстановления пароля.
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="forgotEmail">Email</label>
+            <input
+              type="email"
+              id="forgotEmail"
+              class="form-input"
+              placeholder="ivan@example.com"
+            />
+            <span class="form-error" id="forgotEmailError"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancelForgot">Отмена</button>
+          <button class="btn btn-primary" id="submitForgot">Отправить</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/pages/index.js"></script>
+  </body>
+</html>

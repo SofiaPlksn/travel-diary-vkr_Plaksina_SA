@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelDiary — Поездка</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.css"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/pages/trip-detail.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <main class="main-content" style="padding: 0; overflow: hidden">
+
+        <div class="trip-header" id="tripHeader">
+          <div class="trip-header__overlay"></div>
+          <div class="trip-header__content">
+            <a href="/trips.html" class="btn btn-ghost back-link"
+              >← Все поездки</a
+            >
+            <div class="flex justify-between items-end mt-4">
+              <div>
+                <div class="flex gap-2 items-center mb-2">
+                  <span class="badge" id="headerStatus"></span>
+                  <span
+                    class="badge badge-private"
+                    id="headerVisibility"
+                  ></span>
+                </div>
+                <h1 class="trip-header__title" id="tripTitle">Загрузка...</h1>
+                <div class="trip-header__meta" id="tripMeta"></div>
+              </div>
+              <div class="flex gap-2">
+                <button
+                  class="btn btn-ghost"
+                  id="shareBtn"
+                  title="Поделиться и Экспорт"
+                >
+                  🔗 Поделиться
+                </button>
+                <a href="#" class="btn btn-secondary" id="editBtn"
+                  >✏️ Редактировать</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trip-stats" id="tripStats">
+          <div class="trip-stat">
+            <div class="trip-stat__value" id="statMedia">—</div>
+            <div class="trip-stat__label">Медиафайлов</div>
+          </div>
+          <div class="trip-stat">
+            <div class="trip-stat__value" id="statPlaces">—</div>
+            <div class="trip-stat__label">Мест</div>
+          </div>
+          <div class="trip-stat">
+            <div class="trip-stat__value" id="statJournal">—</div>
+            <div class="trip-stat__label">Записей</div>
+          </div>
+          <div class="trip-stat">
+            <div class="trip-stat__value" id="statDays">—</div>
+            <div class="trip-stat__label">Дней</div>
+          </div>
+        </div>
+
+        <div class="detail-tabs-wrapper">
+          <div class="tabs detail-tabs" id="tabs">
+            <button class="tab active" data-tab="map">🗺️ Карта</button>
+            <button class="tab" data-tab="media">🖼️ Медиа</button>
+            <button class="tab" data-tab="places">📍 Места</button>
+            <button class="tab" data-tab="journal">✍️ Дневник</button>
+            <button class="tab" data-tab="files">📂 Файлы</button>
+            <button class="tab" data-tab="weather">🌤️ Погода</button>
+          </div>
+        </div>
+
+        <div class="tab-content-wrapper" style="padding: var(--space-6)">
+
+          <div class="tab-panel active" id="panel-map">
+            <div class="map-toolbar">
+              <button class="btn btn-secondary btn-sm" id="tripToggleRadarBtn">
+                🌧 Показать радар
+              </button>
+              <button class="btn btn-secondary btn-sm" id="mapPinModeBtn">
+                📍 Поставить метку вручную
+              </button>
+              <span
+                class="map-toolbar__hint"
+                id="mapPinHint"
+                style="display: none"
+              >
+                🖱️ Кликните на карту — появится форма добавления места
+              </span>
+            </div>
+            <div id="map" class="trip-map"></div>
+            <div class="map-legend">
+              <span>📍 Места</span>
+              <span>📸 Медиа с GPS</span>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-media">
+            <div class="panel-actions mb-4">
+              <h3>Медиа</h3>
+              <div class="flex gap-2">
+                <label class="btn btn-primary" for="mediaImageUpload">
+                  📤 Фото
+                </label>
+                <input
+                  type="file"
+                  id="mediaImageUpload"
+                  accept=".jpg,.jpeg,.png,.webp"
+                  multiple
+                  style="display: none"
+                />
+                <label class="btn btn-secondary" for="mediaVideoUpload">
+                  🎬 Видео
+                </label>
+                <input
+                  type="file"
+                  id="mediaVideoUpload"
+                  accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
+                  multiple
+                  style="display: none"
+                />
+              </div>
+            </div>
+
+            <div
+              id="uploadProgress"
+              style="display: none"
+              class="upload-progress mb-4"
+            >
+              <div class="upload-progress__bar">
+                <div class="upload-progress__fill" id="uploadFill"></div>
+              </div>
+              <span class="text-sm text-secondary" id="uploadStatus"
+                >Загрузка...</span
+              >
+            </div>
+
+            <div id="mediaGrid" class="media-grid">
+              <div class="skeleton skeleton-card" style="height: 200px"></div>
+              <div class="skeleton skeleton-card" style="height: 200px"></div>
+              <div class="skeleton skeleton-card" style="height: 200px"></div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-places">
+            <div class="panel-actions mb-4">
+              <h3>Места</h3>
+              <button class="btn btn-primary" id="addPlaceBtn">
+                📍 Добавить место
+              </button>
+            </div>
+
+            <div id="placesList">
+              <div
+                class="skeleton skeleton-text"
+                style="height: 60px; margin-bottom: 8px"
+              ></div>
+              <div
+                class="skeleton skeleton-text"
+                style="height: 60px; margin-bottom: 8px"
+              ></div>
+              <div class="skeleton skeleton-text" style="height: 60px"></div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-journal">
+            <div class="panel-actions mb-4">
+              <h3>Дневник</h3>
+              <button class="btn btn-primary" id="addJournalBtn">
+                ✍️ Новая запись
+              </button>
+            </div>
+            <div id="journalList">
+              <div
+                class="skeleton skeleton-text"
+                style="height: 80px; margin-bottom: 8px"
+              ></div>
+              <div class="skeleton skeleton-text" style="height: 80px"></div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-files">
+            <div class="panel-actions mb-4">
+              <h3>Файлы</h3>
+              <div class="flex gap-2">
+                <label class="btn btn-primary" for="fileUpload">
+                  📤 Загрузить файл
+                </label>
+                <input
+                  type="file"
+                  id="fileUpload"
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.ppt,.pptx,.rtf"
+                  multiple
+                  style="display: none"
+                />
+              </div>
+            </div>
+
+            <div
+              id="fileUploadProgress"
+              style="display: none"
+              class="upload-progress mb-4"
+            >
+              <div class="upload-progress__bar">
+                <div class="upload-progress__fill" id="fileUploadFill"></div>
+              </div>
+              <span class="text-sm text-secondary" id="fileUploadStatus"
+                >Загрузка...</span
+              >
+            </div>
+
+            <div
+              id="filesList"
+              class="files-list"
+              style="display: flex; flex-direction: column; gap: var(--space-3)"
+            >
+              <div class="skeleton skeleton-text" style="height: 60px"></div>
+              <div class="skeleton skeleton-text" style="height: 60px"></div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-weather">
+
+            <div class="weather-city-bar">
+              <div class="weather-city-search">
+                <input
+                  type="text"
+                  id="weatherCityInput"
+                  class="form-input"
+                  placeholder="Введите город — например, Рим или Париж"
+                  autocomplete="off"
+                />
+                <div
+                  id="weatherCitySuggestions"
+                  class="geocode-dropdown"
+                  style="display: none"
+                ></div>
+              </div>
+              <button class="btn btn-primary" id="weatherCityBtn">
+                🌤️ Показать погоду
+              </button>
+            </div>
+            <div id="weatherContent">
+              <div class="empty-state" style="margin-top: 2rem">
+                <span class="empty-state__icon">🌍</span>
+                <p class="empty-state__title">Выберите город</p>
+                <p class="empty-state__text">
+                  Введите название города выше, чтобы увидеть прогноз погоды и
+                  список вещей
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-overlay" id="placeModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="placeModalTitle">Добавить место</h3>
+          <button class="btn-ghost btn-icon" onclick="closePlaceModal()">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group mb-4">
+            <label class="form-label"
+              >Название <span style="color: red">*</span></label
+            >
+            <input
+              type="text"
+              id="placeName"
+              class="form-input"
+              placeholder="Колизей"
+            />
+          </div>
+          <div class="grid-2 mb-4">
+            <div class="form-group">
+              <label class="form-label">Категория</label>
+              <select id="placeCategory" class="form-select">
+                <option value="ATTRACTION">🏛 Достопримечательность</option>
+                <option value="RESTAURANT">🍽 Ресторан</option>
+                <option value="HOTEL">🏨 Отель</option>
+                <option value="MUSEUM">🎨 Музей</option>
+                <option value="NATURE">🌿 Природа</option>
+                <option value="TRANSPORT">🚉 Транспорт</option>
+                <option value="SHOPPING">🛍 Шоппинг</option>
+                <option value="ENTERTAINMENT">🎭 Развлечения</option>
+                <option value="OTHER">📌 Другое</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Рейтинг</label>
+              <div class="star-rating" id="placeRating">
+                <button class="star" data-value="1">★</button>
+                <button class="star" data-value="2">★</button>
+                <button class="star" data-value="3">★</button>
+                <button class="star" data-value="4">★</button>
+                <button class="star" data-value="5">★</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-2" style="position: relative">
+            <label class="form-label"
+              >Адрес
+              <span style="font-size: 12px; color: var(--color-text-muted)"
+                >(начните вводить — появятся подсказки)</span
+              ></label
+            >
+            <input
+              type="text"
+              id="placeAddress"
+              class="form-input"
+              placeholder="Колизей, Рим"
+              autocomplete="off"
+            />
+            <div
+              id="addressSuggestions"
+              class="geocode-dropdown"
+              style="display: none"
+            ></div>
+          </div>
+
+          <input type="hidden" id="placeLat" />
+          <input type="hidden" id="placeLon" />
+          <div id="placeCoordsBadge" class="coords-badge" style="display: none">
+            <span>📍</span> <span id="placeCoordsText"></span>
+            <button
+              type="button"
+              onclick="clearPlaceCoords()"
+              title="Сбросить координаты"
+            >
+              ✕
+            </button>
+          </div>
+          <div class="form-group mt-3">
+            <label class="form-label">Заметка</label>
+            <textarea
+              id="placeNote"
+              class="form-textarea"
+              rows="2"
+              placeholder="Открыт с 9:00 до 18:00, вход €16..."
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closePlaceModal()">
+            Отмена
+          </button>
+          <button class="btn btn-primary" id="savePlaceBtn">Сохранить</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="journalModal">
+      <div class="modal" style="max-width: 640px">
+        <div class="modal-header">
+          <h3 id="journalModalTitle">Новая запись</h3>
+          <button class="btn-ghost btn-icon" onclick="closeJournalModal()">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group mb-4">
+            <label class="form-label"
+              >Заголовок <span style="color: red">*</span></label
+            >
+            <input
+              type="text"
+              id="journalTitle"
+              class="form-input"
+              placeholder="День первый в Риме"
+            />
+          </div>
+          <div class="grid-2 mb-4">
+            <div class="form-group">
+              <label class="form-label">Дата</label>
+              <input type="date" id="journalDate" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Настроение</label>
+              <select id="journalMood" class="form-select">
+                <option value="">— не указано —</option>
+                <option value="AMAZING">😍 Восхитительно</option>
+                <option value="GOOD">😊 Хорошо</option>
+                <option value="NEUTRAL">😐 Нейтрально</option>
+                <option value="TIRED">😴 Устал</option>
+                <option value="BAD">😞 Плохо</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Запись</label>
+            <textarea
+              id="journalContent"
+              class="form-textarea"
+              rows="6"
+              placeholder="Что сегодня произошло?"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeJournalModal()">
+            Отмена
+          </button>
+          <button class="btn btn-primary" id="saveJournalBtn">Сохранить</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="mediaModal">
+      <div class="media-viewer">
+        <button class="media-viewer__close" onclick="closeMediaModal()">
+          ✕
+        </button>
+        <button class="media-viewer__nav prev" id="mediaPrev">‹</button>
+        <img
+          class="media-viewer__img"
+          id="mediaViewerImg"
+          src=""
+          alt=""
+          style="display: none"
+        />
+        <video
+          class="media-viewer__img"
+          id="mediaViewerVideo"
+          controls
+          style="display: none; max-height: 80vh; background: #000"
+        ></video>
+        <button class="media-viewer__nav next" id="mediaNext">›</button>
+        <div class="media-viewer__caption" id="mediaViewerCaption"></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="mediaEditModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="mediaEditModalTitle">Редактировать медиа</h3>
+          <button class="btn-ghost btn-icon" onclick="closeMediaEditModal()">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-4">
+            <img
+              id="editMediaPreview"
+              src=""
+              alt="Preview"
+              style="
+                max-height: 150px;
+                border-radius: 8px;
+                object-fit: contain;
+                width: 100%;
+                background: #f1f5f9;
+              "
+            />
+          </div>
+          <div class="form-group mb-4">
+            <label class="form-label">Подпись</label>
+            <input
+              type="text"
+              id="mediaCaption"
+              class="form-input"
+              placeholder="Красивое место..."
+            />
+          </div>
+
+          <div class="form-group mb-2" style="position: relative">
+            <label class="form-label"
+              >Адрес (где снято)
+              <span style="font-size: 12px; color: var(--color-text-muted)"
+                >(начните вводить)</span
+              ></label
+            >
+            <input
+              type="text"
+              id="mediaAddress"
+              class="form-input"
+              placeholder="Например: Колизей, Рим"
+              autocomplete="off"
+            />
+            <div
+              id="mediaAddressSuggestions"
+              class="geocode-dropdown"
+              style="display: none"
+            ></div>
+          </div>
+
+          <input type="hidden" id="mediaLat" />
+          <input type="hidden" id="mediaLon" />
+          <div id="mediaCoordsBadge" class="coords-badge" style="display: none">
+            <span>📍</span> <span id="mediaCoordsText"></span>
+            <button
+              type="button"
+              onclick="clearMediaCoords()"
+              title="Сбросить координаты"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeMediaEditModal()">
+            Отмена
+          </button>
+          <button class="btn btn-primary" id="saveMediaEditBtn">
+            Сохранить
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="shareModal">
+      <div class="modal" style="max-width: 500px">
+        <div class="modal-header">
+          <h3>🔗 Поделиться и Экспорт</h3>
+          <button
+            class="btn-ghost btn-icon"
+            onclick="document.getElementById('shareModal').classList.remove('open')"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="tabs mb-4" id="shareTabs">
+            <button
+              class="tab active"
+              data-tab="share-link-tab"
+              onclick="switchShareTab('share-link-tab')"
+            >
+              Временная ссылка
+            </button>
+            <button
+              class="tab"
+              data-tab="share-pdf-tab"
+              onclick="switchShareTab('share-pdf-tab')"
+            >
+              PDF документ
+            </button>
+          </div>
+
+          <div id="share-link-tab" class="share-tab-content">
+            <p class="text-secondary text-sm mb-3">
+              Включите доступ, чтобы поделиться поездкой.
+            </p>
+
+            <div
+              class="form-group mb-4"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <label class="form-label" style="margin-bottom: 0"
+                >Доступ по ссылке</label
+              >
+              <label class="toggle-switch">
+                <input type="checkbox" id="shareToggle" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div
+              class="share-link-wrapper"
+              id="shareLinkContainer"
+              style="display: none; flex-direction: column; gap: 16px"
+            >
+              <div style="display: flex; gap: 8px">
+                <input type="text" id="shareLink" class="form-input" readonly />
+                <button class="btn btn-primary" id="copyLinkBtn">
+                  Копировать
+                </button>
+              </div>
+
+              <div
+                class="qr-code-wrapper"
+                style="
+                  text-align: center;
+                  padding: 16px;
+                  background: #fff;
+                  border-radius: 12px;
+                  margin-top: 8px;
+                "
+              >
+                <p class="text-sm text-secondary mb-2">
+                  Отсканируйте камерой телефона:
+                </p>
+                <div id="qrcode" style="display: inline-block"></div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="share-pdf-tab"
+            class="share-tab-content"
+            style="display: none"
+          >
+            <p class="text-secondary text-sm mb-3">
+              Выберите, какие разделы включить в PDF-документ:
+            </p>
+            <div class="pdf-sections mb-4">
+              <label class="pdf-section-check">
+                <input type="checkbox" id="pdfDescription" checked />
+                <span>📝 Описание поездки</span>
+              </label>
+              <label class="pdf-section-check">
+                <input type="checkbox" id="pdfPlaces" checked />
+                <span>📍 Места</span>
+              </label>
+              <label class="pdf-section-check">
+                <input type="checkbox" id="pdfJournal" checked />
+                <span>✍️ Записи дневника</span>
+              </label>
+            </div>
+            <button class="btn btn-primary w-full" id="downloadPdfBtn">
+              📥 Скачать PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function switchShareTab(tabId) {
+        document
+          .querySelectorAll("#shareModal .tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelector('#shareModal .tab[data-tab="' + tabId + '"]')
+          .classList.add("active");
+        document
+          .querySelectorAll(".share-tab-content")
+          .forEach((c) => (c.style.display = "none"));
+        document.getElementById(tabId).style.display = "block";
+      }
+    </script>
+
+    <script src="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/pages/trip-detail.js"></script>
+  </body>
+</html>

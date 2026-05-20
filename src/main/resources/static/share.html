@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelDiary — Поездка</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.css"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/pages/share.css" />
+  </head>
+  <body class="share-page">
+
+    <header class="share-header">
+      <a href="/index.html" class="share-header__logo">
+        <span>🗺️</span>
+        <span>TravelDiary</span>
+      </a>
+      <a href="/index.html" class="btn btn-primary btn-sm">
+        Войти / Зарегистрироваться
+      </a>
+    </header>
+
+    <div id="pageLoader" class="share-loader">
+      <div class="spinner"></div>
+      <p>Загрузка поездки...</p>
+    </div>
+
+    <div id="errorState" class="share-error" style="display: none">
+      <span style="font-size: 4rem">🔒</span>
+      <h2>Поездка недоступна</h2>
+      <p>Ссылка недействительна или срок её действия истёк.</p>
+      <a href="/index.html" class="btn btn-primary mt-4">
+        Перейти на главную
+      </a>
+    </div>
+
+    <div id="shareContent" style="display: none">
+
+      <div class="share-hero" id="shareHero">
+        <div class="share-hero__overlay"></div>
+        <div class="share-hero__content container">
+          <div class="share-hero__badges" id="heroBadges"></div>
+          <h1 class="share-hero__title" id="shareTitle">Загрузка...</h1>
+          <div class="share-hero__meta" id="shareMeta"></div>
+          <div class="share-hero__stats" id="shareStats"></div>
+          <button
+            class="btn btn-primary btn-sm"
+            id="sharePdfBtn"
+            style="margin-top: 12px"
+          >
+            📥 Скачать PDF
+          </button>
+        </div>
+      </div>
+
+      <div class="container share-body">
+        <div
+          id="shareDescription"
+          style="display: none"
+          class="share-description card card-body mb-8"
+        ></div>
+
+        <div id="shareTags" class="share-tags mb-8"></div>
+
+        <section
+          class="share-section mb-10"
+          id="mapSection"
+          style="display: none"
+        >
+          <h2 class="share-section__title">🗺️ Маршрут</h2>
+          <div id="shareMap" class="share-map"></div>
+        </section>
+
+        <section
+          class="share-section mb-10"
+          id="placesSection"
+          style="display: none"
+        >
+          <h2 class="share-section__title">📍 Места</h2>
+          <div class="share-places-grid" id="sharePlaces"></div>
+        </section>
+
+        <section
+          class="share-section mb-10"
+          id="mediaSection"
+          style="display: none"
+        >
+          <h2 class="share-section__title">🖼️ Галерея</h2>
+          <div class="share-media-grid" id="shareMedia"></div>
+        </section>
+
+        <section
+          class="share-section mb-10"
+          id="journalSection"
+          style="display: none"
+        >
+          <h2 class="share-section__title">✍️ Дневник</h2>
+          <div id="shareJournal"></div>
+        </section>
+
+        <div class="share-cta">
+          <div class="share-cta__content">
+            <div class="share-cta__icon">🗺️</div>
+            <h3>Ведите дневник своих путешествий</h3>
+            <p>
+              Сохраняйте маршруты, фотографии и впечатления в TravelDiary —
+              бесплатно
+            </p>
+            <a href="/index.html" class="btn btn-primary btn-lg">
+              Начать бесплатно
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="mediaModal">
+      <div class="media-viewer">
+        <button class="media-viewer__close" onclick="closeMediaModal()">
+          ✕
+        </button>
+        <button class="media-viewer__nav prev" id="mediaPrev">‹</button>
+        <img
+          class="media-viewer__img"
+          id="mediaViewerImg"
+          src=""
+          alt=""
+          style="display: none"
+        />
+        <video
+          class="media-viewer__img"
+          id="mediaViewerVideo"
+          controls
+          style="display: none; max-height: 80vh; background: #000"
+        ></video>
+        <button class="media-viewer__nav next" id="mediaNext">›</button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="pdfModal">
+      <div class="modal" style="max-width: 440px">
+        <div class="modal-header">
+          <h3>📥 Скачать PDF</h3>
+          <button
+            class="btn-ghost btn-icon"
+            onclick="document.getElementById('pdfModal').classList.remove('open')"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-secondary text-sm mb-4">
+            Выберите, какие разделы включить в PDF-документ:
+          </p>
+          <div class="pdf-sections">
+            <label class="pdf-section-check">
+              <input type="checkbox" id="pdfDescription" checked />
+              <span>📝 Описание поездки</span>
+            </label>
+            <label class="pdf-section-check">
+              <input type="checkbox" id="pdfPlaces" checked />
+              <span>📍 Места</span>
+            </label>
+            <label class="pdf-section-check">
+              <input type="checkbox" id="pdfJournal" checked />
+              <span>✍️ Записи дневника</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="document.getElementById('pdfModal').classList.remove('open')"
+          >
+            Отмена
+          </button>
+          <button class="btn btn-primary" id="downloadPdfBtn">
+            📥 Скачать
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/pages/share.js"></script>
+  </body>
+</html>

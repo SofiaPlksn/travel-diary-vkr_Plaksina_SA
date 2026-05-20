@@ -1,0 +1,188 @@
+/* Страница авторизации */
+.auth-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+/* Левая панель */
+.auth-hero {
+  background: linear-gradient(145deg, #1e1b4b 0%, #312e81 40%, #4f46e5 75%, #7c3aed 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  position: relative;
+  overflow: hidden;
+}
+/* Декоративные круги */
+.auth-hero::before, .auth-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  pointer-events: none;
+}
+.auth-hero::before {
+  width: 500px;
+  height: 500px;
+  top: -150px;
+  right: -150px;
+}
+.auth-hero::after {
+  width: 350px;
+  height: 350px;
+  bottom: -100px;
+  left: -100px;
+}
+.auth-hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+}
+.auth-hero__logo {
+  font-size: 4rem;
+  margin-bottom: var(--space-4);
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,.3));
+}
+.auth-hero__title {
+  font-size: 2.75rem;
+  font-weight: var(--font-bold);
+  color: #fff;
+  margin-bottom: var(--space-3);
+  letter-spacing: -.025em;
+}
+.auth-hero__subtitle {
+  font-size: var(--text-lg);
+  opacity: .8;
+  line-height: 1.7;
+  margin-bottom: var(--space-8);
+}
+.auth-hero__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.auth-hero__feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  background: rgba(255,255,255,.1);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.12);
+}
+/* Правая панель (форма) */
+.auth-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  background: var(--color-surface);
+}
+.auth-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+/* Вкладки Войти / Регистрация */
+.auth-tabs {
+  display: flex;
+  background: var(--color-bg);
+  border-radius: var(--radius-xl);
+  padding: 4px;
+  margin-bottom: var(--space-6);
+}
+.auth-tab {
+  flex: 1;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  transition: all var(--transition);
+}
+.auth-tab.active {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+.auth-form__title {
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+  letter-spacing: -.01em;
+}
+.auth-form__subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+/* Поле пароля */
+.input-password-wrapper {
+  position: relative;
+}
+.input-password-wrapper .form-input {
+  padding-right: 3rem;
+}
+.password-toggle {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  padding: 2px;
+  line-height: 1;
+}
+.password-toggle:hover {
+  color: var(--color-text);
+}
+/* Индикатор силы пароля */
+.password-strength__bar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.password-strength__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width .3s ease, background .3s ease;
+  width: 0%;
+}
+.password-strength__label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+/* Чекбокс */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+/* Ошибка формы */
+.auth-error {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(239,68,68,.15);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+/* Адаптив */
+@media (max-width: 768px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+  }
+  .auth-hero {
+    display: none;
+  }
+  .auth-panel {
+    padding: var(--space-6) var(--space-4);
+  }
+}

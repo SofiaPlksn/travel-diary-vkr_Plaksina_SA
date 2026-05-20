@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelDiary — Профиль</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/pages/profile.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <main class="main-content">
+        <div class="profile-hero card mb-6">
+          <div class="profile-hero__bg"></div>
+          <div class="profile-hero__content">
+            <div
+              class="profile-avatar"
+              id="profileAvatar"
+              title="Нажмите, чтобы изменить фото"
+            >
+              <img id="profileAvatarImg" src="" alt="" style="display: none" />
+              <span id="profileAvatarInitials">?</span>
+            </div>
+            <input
+              type="file"
+              id="avatarInput"
+              accept=".jpg,.jpeg,.png,.webp"
+              style="display: none"
+            />
+            <div class="profile-info">
+              <h2 id="profileName">Загрузка...</h2>
+              <p class="text-secondary" id="profileEmail"></p>
+              <p class="text-muted text-sm" id="profileSince"></p>
+            </div>
+            <button class="btn btn-secondary" id="editProfileBtn">
+              ✏️ Редактировать
+            </button>
+          </div>
+        </div>
+
+        <div class="tabs mb-6" id="profileTabs">
+          <button class="tab active" data-tab="stats">📊 Статистика</button>
+          <button class="tab" data-tab="achievements">🏆 Достижения</button>
+          <button class="tab" data-tab="countries">🌍 Страны</button>
+          <button class="tab" data-tab="settings">⚙️ Настройки</button>
+        </div>
+
+        <div class="tab-panel active" id="panel-stats">
+
+          <div class="stats-grid mb-8" id="statsGrid">
+            <div
+              class="skeleton"
+              style="height: 100px; border-radius: 12px"
+            ></div>
+            <div
+              class="skeleton"
+              style="height: 100px; border-radius: 12px"
+            ></div>
+            <div
+              class="skeleton"
+              style="height: 100px; border-radius: 12px"
+            ></div>
+            <div
+              class="skeleton"
+              style="height: 100px; border-radius: 12px"
+            ></div>
+          </div>
+
+          <div class="grid-2 mb-6">
+            <div class="card card-body">
+              <h4 class="mb-4">Поездки по статусу</h4>
+              <div style="position: relative; height: 220px">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+            <div class="card card-body">
+              <h4 class="mb-4">Поездки по месяцам</h4>
+              <div style="position: relative; height: 220px">
+                <canvas id="monthsChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-body">
+            <h4 class="mb-4">🌍 Топ-5 стран</h4>
+            <div id="topCountries">
+              <div class="skeleton skeleton-text"></div>
+              <div class="skeleton skeleton-text"></div>
+              <div class="skeleton skeleton-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-achievements">
+          <div class="achievements-header mb-4">
+            <h3>Ваши достижения</h3>
+            <span class="text-secondary text-sm" id="achievementsCount"></span>
+          </div>
+          <div class="achievements-grid" id="achievementsGrid">
+            <div class="skeleton skeleton-card" style="height: 140px"></div>
+            <div class="skeleton skeleton-card" style="height: 140px"></div>
+            <div class="skeleton skeleton-card" style="height: 140px"></div>
+            <div class="skeleton skeleton-card" style="height: 140px"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-countries">
+          <h3 class="mb-4">Посещённые страны</h3>
+          <div id="countriesGrid" class="countries-grid">
+            <div class="skeleton skeleton-card" style="height: 80px"></div>
+            <div class="skeleton skeleton-card" style="height: 80px"></div>
+            <div class="skeleton skeleton-card" style="height: 80px"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-settings">
+          <div class="settings-section card mb-4">
+            <div class="card-header"><h4>👤 Личные данные</h4></div>
+            <div class="card-body">
+              <div class="form-group mb-4">
+                <label class="form-label">Имя</label>
+                <input type="text" id="settingsName" class="form-input" />
+              </div>
+              <div class="form-group mb-4">
+                <label class="form-label">Email</label>
+                <input type="email" id="settingsEmail" class="form-input" />
+              </div>
+              <button class="btn btn-primary" id="saveProfileBtn">
+                Сохранить
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-section card mb-4">
+            <div class="card-header"><h4>🔒 Смена пароля</h4></div>
+            <div class="card-body">
+              <div class="form-group mb-4">
+                <label class="form-label">Текущий пароль</label>
+                <input
+                  type="password"
+                  id="currentPassword"
+                  class="form-input"
+                />
+              </div>
+              <div class="form-group mb-4">
+                <label class="form-label">Новый пароль</label>
+                <input type="password" id="newPassword" class="form-input" />
+              </div>
+              <div class="form-group mb-4">
+                <label class="form-label">Повторите новый пароль</label>
+                <input
+                  type="password"
+                  id="confirmNewPassword"
+                  class="form-input"
+                />
+              </div>
+              <button class="btn btn-primary" id="changePasswordBtn">
+                Изменить пароль
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-section card">
+            <div class="card-header"><h4>🚪 Сессия</h4></div>
+            <div class="card-body">
+              <p class="text-secondary text-sm mb-4">
+                Выход из аккаунта завершит текущую сессию. Для входа понадобится
+                email и пароль.
+              </p>
+              <button
+                class="btn btn-danger settings-action-btn"
+                id="logoutSettingsBtn"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Выйти из аккаунта
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-section card settings-danger">
+            <div class="card-header"><h4>Удаление аккаунта</h4></div>
+            <div class="card-body">
+              <p class="text-secondary text-sm mb-4">
+                Аккаунт, поездки, дневник, медиафайлы и загруженные документы
+                будут удалены без возможности восстановления.
+              </p>
+              <button
+                class="btn btn-danger settings-action-btn"
+                id="deleteAccountBtn"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path
+                    d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+                  ></path>
+                  <path d="M10 11v6"></path>
+                  <path d="M14 11v6"></path>
+                  <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                </svg>
+                Удалить аккаунт
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/pages/profile.js"></script>
+  </body>
+</html>

@@ -1,0 +1,210 @@
+/* Страница списка поездок */
+.page-header h1 {
+  line-height: 1.2;
+  letter-spacing: -.015em;
+}
+/* Панель фильтров */
+.trips-filters {
+  padding: var(--space-4) var(--space-5);
+}
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+.search-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-sm);
+  pointer-events: none;
+}
+.search-input {
+  padding-left: 2.2rem;
+}
+.filter-select {
+  min-width: 160px;
+  flex-shrink: 0;
+}
+/* Переключатель вид */
+.view-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: 3px;
+  border: 1px solid var(--color-border);
+}
+.view-toggle .btn-ghost {
+  border-radius: var(--radius-md);
+}
+.view-toggle .btn-ghost.active {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+/* Кнопки действий на карточке */
+.trip-card {
+  position: relative;
+}
+.trip-card__actions {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: flex;
+  gap: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.trip-card:hover .trip-card__actions {
+  opacity: 1;
+}
+.trip-card__action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.trip-card__action-btn:hover {
+  background: var(--color-surface);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+/* Список-вид поездок */
+.trip-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition);
+  margin-bottom: var(--space-3);
+}
+.trip-list-item:hover {
+  box-shadow: var(--shadow-md);
+  color: inherit;
+  transform: translateY(-1px);
+}
+.trip-list-item__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+.trip-list-item__link:hover {
+  color: inherit;
+}
+.trip-list-item__cover {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  object-fit: cover;
+}
+.trip-list-item__info {
+  flex: 1;
+  min-width: 0;
+}
+.trip-list-item__title {
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.trip-list-item__meta {
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  flex-wrap: wrap;
+}
+.trip-list-item__meta span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.trip-list-item__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+/* Пагинация */
+.pagination .btn {
+  min-width: 36px;
+  justify-content: center;
+}
+.pagination .btn.active {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-primary);
+}
+/* Градиенты обложек */
+.cover-gradient-0 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.cover-gradient-1 {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+.cover-gradient-2 {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+.cover-gradient-3 {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+.cover-gradient-4 {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+.cover-gradient-5 {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+.cover-gradient-6 {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+.cover-gradient-7 {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+}
+@media (max-width: 600px) {
+  .trip-list-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .trip-list-item__link {
+    align-items: flex-start;
+  }
+  .trip-list-item__cover {
+    width: 64px;
+    height: 64px;
+  }
+  .trip-list-item__meta {
+    gap: var(--space-2);
+  }
+  .trip-list-item__actions {
+    justify-content: space-between;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-border-light);
+  }
+}

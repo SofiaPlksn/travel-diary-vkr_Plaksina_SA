@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelDiary — Воспоминания</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/pages/memories.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <main class="main-content">
+
+        <div class="memories-hero mb-8">
+          <div class="memories-hero__icon">🌟</div>
+          <div>
+            <h1>Воспоминания</h1>
+            <p class="text-secondary mt-1" id="todayLabel">Загрузка...</p>
+          </div>
+        </div>
+
+        <section class="memories-section mb-10" id="sectionToday">
+          <div class="memories-section__header">
+            <h2 class="memories-section__title">🗓 В этот день</h2>
+            <span class="text-secondary text-sm" id="todayCount"></span>
+          </div>
+
+          <div id="todayContent">
+            <div class="memories-skeleton">
+              <div
+                class="skeleton"
+                style="height: 220px; border-radius: 16px"
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 220px; border-radius: 16px"
+              ></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="memories-section mb-10">
+          <div class="memories-section__header">
+            <h2 class="memories-section__title">🕐 Недавние поездки</h2>
+            <a href="/trips.html" class="btn btn-ghost btn-sm">Все поездки →</a>
+          </div>
+
+          <div id="recentContent">
+            <div class="memories-skeleton">
+              <div
+                class="skeleton"
+                style="height: 180px; border-radius: 16px"
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 180px; border-radius: 16px"
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 180px; border-radius: 16px"
+              ></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="memories-section mb-10">
+          <div class="memories-section__header">
+            <h2 class="memories-section__title">🎲 Случайное медиа</h2>
+            <button class="btn btn-ghost btn-sm" id="refreshRandomBtn">
+              Другое медиа ↻
+            </button>
+          </div>
+
+          <div id="randomMediaContent">
+            <div
+              class="skeleton"
+              style="height: 320px; border-radius: 16px"
+            ></div>
+          </div>
+        </section>
+
+        <section class="memories-section">
+          <div class="memories-section__header">
+            <h2 class="memories-section__title">
+              📊 Ваши путешествия в цифрах
+            </h2>
+          </div>
+
+          <div class="memories-numbers" id="memoriesNumbers">
+            <div
+              class="skeleton"
+              style="height: 100px; border-radius: 16px"
+            ></div>
+            <div
+              class="skeleton"
+              style="height: 100px; border-radius: 16px"
+            ></div>
+            <div
+              class="skeleton"
+              style="height: 100px; border-radius: 16px"
+            ></div>
+            <div
+              class="skeleton"
+              style="height: 100px; border-radius: 16px"
+            ></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/pages/memories.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Build output
+target/
+
+# Git
+.git/
+.gitignore
+
+# Docker (не отправляем compose в контекст билда)
+docker-compose.yml
+Dockerfile
+
+# Env
+.env
+.env.*
+
+# Uploads (runtime data)
+uploads/
+
+# Misc
+*.md
+*.log

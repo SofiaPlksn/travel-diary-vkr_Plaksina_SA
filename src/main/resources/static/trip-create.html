@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelDiary — Новая поездка</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/pages/trip-create.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <main class="main-content">
+
+        <div class="page-header flex items-center gap-4 mb-8">
+          <a href="/trips.html" class="btn btn-ghost btn-icon back-btn">←</a>
+          <div>
+            <h1 id="pageTitle">Новая поездка</h1>
+            <p class="text-secondary text-sm mt-1" id="pageSubtitle">
+              Заполните основную информацию о поездке
+            </p>
+          </div>
+        </div>
+
+        <div class="create-layout">
+
+          <div class="create-main">
+
+            <div class="card mb-6">
+              <div class="card-header">
+                <h3>📋 Основная информация</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group mb-4">
+                  <label class="form-label" for="tripTitle">
+                    Название поездки <span class="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="tripTitle"
+                    class="form-input"
+                    placeholder="Например: Путешествие по Италии"
+                    maxlength="100"
+                  />
+                  <span class="form-error" id="titleError"></span>
+                </div>
+
+                <div class="grid-2 mb-4">
+                  <div class="form-group">
+                    <label class="form-label" for="tripCountry">
+                      Страна <span class="required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="tripCountry"
+                      class="form-input"
+                      placeholder="Italy"
+                      list="countrySuggestions"
+                    />
+                    <datalist id="countrySuggestions"></datalist>
+                    <span class="form-error" id="countryError"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="tripCity">Город</label>
+                    <input
+                      type="text"
+                      id="tripCity"
+                      class="form-input"
+                      placeholder="Rome"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="tripDescription"
+                    >Описание</label
+                  >
+                  <textarea
+                    id="tripDescription"
+                    class="form-textarea"
+                    placeholder="Расскажите о поездке..."
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mb-6">
+              <div class="card-header">
+                <h3>📅 Даты</h3>
+              </div>
+              <div class="card-body">
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label class="form-label" for="startDate">
+                      Дата начала <span class="required">*</span>
+                    </label>
+                    <input type="date" id="startDate" class="form-input" />
+                    <span class="form-error" id="startDateError"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="endDate"
+                      >Дата окончания</label
+                    >
+                    <input type="date" id="endDate" class="form-input" />
+                    <span class="form-hint">Можно оставить пустым</span>
+                  </div>
+                </div>
+
+                <div
+                  class="duration-badge"
+                  id="durationBadge"
+                  style="display: none"
+                >
+                  <span>🗓</span>
+                  <span id="durationText"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mb-6">
+              <div class="card-header">
+                <h3>⚙️ Настройки</h3>
+              </div>
+              <div class="card-body">
+                <div class="grid-2 mb-4">
+                  <div class="form-group">
+                    <label class="form-label" for="tripStatus">Статус</label>
+                    <select id="tripStatus" class="form-select">
+                      <option value="PLANNED">🗓 Запланирована</option>
+                      <option value="ACTIVE">🚀 Активная</option>
+                      <option value="COMPLETED">✅ Завершена</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="tripVisibility"
+                      >Видимость</label
+                    >
+                    <select id="tripVisibility" class="form-select">
+                      <option value="PRIVATE">🔒 Только я</option>
+                      <option value="LINK_ONLY">🔗 По ссылке</option>
+                      <option value="PUBLIC">🌍 Публично</option>
+                    </select>
+                    <span class="form-hint" id="visibilityHint">
+                      Только вы можете видеть эту поездку
+                    </span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="tripBudget"
+                    >Бюджет (в рублях)</label
+                  >
+                  <input
+                    type="number"
+                    id="tripBudget"
+                    class="form-input"
+                    placeholder="100000"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="card mb-6">
+              <div class="card-header">
+                <h3>🏷️ Теги</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label">Добавьте теги</label>
+                  <div class="tags-input-wrapper">
+                    <div class="tags-list" id="tagsList"></div>
+                    <input
+                      type="text"
+                      id="tagsInput"
+                      class="tags-text-input"
+                      placeholder="Введите тег и нажмите Enter..."
+                    />
+                  </div>
+                  <span class="form-hint"
+                    >Например: море, горы, пляж, культура, еда</span
+                  >
+                </div>
+
+                <div class="quick-tags mt-3">
+                  <span class="text-sm text-secondary">Быстро добавить:</span>
+                  <div class="quick-tags-list">
+                    <button type="button" class="quick-tag" data-tag="море">
+                      море
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="горы">
+                      горы
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="пляж">
+                      пляж
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="культура">
+                      культура
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="гастро">
+                      гастро
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="пешком">
+                      пешком
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="с детьми">
+                      с детьми
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="бюджетно">
+                      бюджетно
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="люкс">
+                      люкс
+                    </button>
+                    <button type="button" class="quick-tag" data-tag="природа">
+                      природа
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="create-sidebar">
+
+            <div class="card mb-6">
+              <div class="card-header">
+                <h4>👁 Предпросмотр</h4>
+              </div>
+              <div class="card-body" style="padding: var(--space-4)">
+                <div class="preview-card" id="previewCard">
+                  <div class="preview-cover" id="previewCover">✈️</div>
+                  <div class="preview-body">
+                    <div class="preview-title" id="previewTitle">
+                      Название поездки
+                    </div>
+                    <div class="preview-location" id="previewLocation">
+                      Страна, город
+                    </div>
+                    <div class="preview-date" id="previewDate">
+                      Дата не указана
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <button
+                  class="btn btn-primary"
+                  id="saveBtn"
+                  style="width: 100%"
+                  disabled
+                >
+                  💾 Сохранить поездку
+                </button>
+
+                <button
+                  class="btn btn-secondary mt-3"
+                  id="saveDraftBtn"
+                  style="width: 100%"
+                >
+                  📝 Сохранить черновик
+                </button>
+
+                <a
+                  href="/trips.html"
+                  class="btn btn-ghost mt-3"
+                  style="width: 100%; justify-content: center"
+                >
+                  Отмена
+                </a>
+
+                <div id="deleteSection" style="display: none">
+                  <hr class="divider" />
+                  <button
+                    class="btn btn-danger"
+                    id="deleteBtn"
+                    style="width: 100%"
+                  >
+                    🗑️ Удалить поездку
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/pages/trip-create.js"></script>
+  </body>
+</html>
