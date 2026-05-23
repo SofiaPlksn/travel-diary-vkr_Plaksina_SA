@@ -89,24 +89,6 @@
 .detail-tabs {
   border-bottom: none;
 }
-.tab-panel {
-  display: none;
-}
-.tab-panel.active {
-  display: block;
-  animation: fadeIn .2s ease;
-}
-/* Строка над содержимым вкладки */
-.panel-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
-.panel-actions h3 {
-  margin: 0;
-}
 /* Карта */
 .trip-map {
   width: 100%;
@@ -237,26 +219,6 @@
   padding: 2px 6px;
   border-radius: var(--radius-full);
   backdrop-filter: blur(4px);
-}
-/* Прогресс загрузки */
-.upload-progress {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-.upload-progress__bar {
-  flex: 1;
-  height: 6px;
-  background: var(--color-border);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-}
-.upload-progress__fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
-  border-radius: var(--radius-full);
-  transition: width .3s ease;
-  width: 0%;
 }
 /* Список мест */
 .place-item {
@@ -477,73 +439,6 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
-/* Просмотрщик медиа */
-.media-viewer {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 900px;
-  max-height: 90vh;
-}
-.media-viewer__img {
-  max-width: 100%;
-  max-height: 80vh;
-  border-radius: var(--radius-xl);
-  object-fit: contain;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, .4);
-}
-.media-viewer__close {
-  position: absolute;
-  top: -44px;
-  right: 0;
-  color: #fff;
-  font-size: var(--text-xl);
-  padding: var(--space-2);
-  background: rgba(255, 255, 255, .12);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(4px);
-}
-.media-viewer__nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #fff;
-  font-size: 2.5rem;
-  padding: var(--space-2) var(--space-3);
-  background: rgba(0, 0, 0, .32);
-  backdrop-filter: blur(4px);
-  border-radius: var(--radius-xl);
-  transition: background var(--transition);
-  line-height: 1;
-}
-.media-viewer__nav:hover {
-  background: rgba(0, 0, 0, .55);
-}
-.media-viewer__nav.prev {
-  left: -64px;
-}
-.media-viewer__nav.next {
-  right: -64px;
-}
-.media-viewer__caption {
-  position: absolute;
-  bottom: -36px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: rgba(255, 255, 255, .75);
-  font-size: var(--text-sm);
-}
-/* Share link wrapper */
-.share-link-wrapper {
-  display: flex;
-  gap: var(--space-2);
-}
-.share-link-wrapper .form-input {
-  flex: 1;
-}
 /* Временный маркер на карте */
 .map-pin-temp {
   font-size: 28px;
@@ -582,11 +477,5 @@
   }
   .weather-city-bar .btn {
     width: 100%;
-  }
-  .media-viewer__nav.prev {
-    left: 4px;
-  }
-  .media-viewer__nav.next {
-    right: 4px;
   }
 }
