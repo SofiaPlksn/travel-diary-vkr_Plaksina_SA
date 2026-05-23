@@ -15,6 +15,7 @@ public class UserDto {
     private String avatarUrl;
     private String homeCountry;
     private User.Role role;
+    private boolean emailConfirmed;
 
     @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
@@ -27,6 +28,7 @@ public class UserDto {
                 .avatarUrl(user.getAvatarUrl())
                 .homeCountry(user.getHomeCountry())
                 .role(user.getRole())
+                .emailConfirmed(user.isEmailConfirmed())
                 .createdAt(user.getCreatedAt())
                 .build();
     }

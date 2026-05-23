@@ -29,6 +29,7 @@ public class WeatherService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+    private final GigaChatService gigaChatService;
 
     private static final String GEOCODING_API_URL = "https://geocoding-api.open-meteo.com/v1/search";
     private static final String WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast";
@@ -63,21 +64,21 @@ public class WeatherService {
         return parseHistoricalForecastFromJson(json);
     }
 
-    @Cacheable(value = "weather", key = "'packing_city_' + #cityName.toLowerCase().trim()")
+    @Cacheable(value = "weather", key = "'packing_city_' + #cityName.toLowerCase().trim() + '_' + (#tripTitle == null ? '' : #tripTitle.toLowerCase().trim())")
     public WeatherDto.PackingRecommendations getPackingRecommendationsByCity(String cityName, String tripTitle) {
         double[] coords = geocodeCity(cityName);
         String json = fetchForecastFromApi(coords[0], coords[1]);
         WeatherDto.WeeklyForecast forecast = parseForecastFromJson(json, coords[0], coords[1]);
-        return generatePackingList(forecast);
+        return generatePackingList(forecast, tripTitle);
     }
 
-    @Cacheable(value = "weather", key = "'packing_' + T(Math).round(#lat * 100.0) / 100.0 + '_' + T(Math).round(#lon * 100.0) / 100.0")
+    @Cacheable(value = "weather", key = "'packing_' + T(Math).round(#lat * 100.0) / 100.0 + '_' + T(Math).round(#lon * 100.0) / 100.0 + '_' + (#tripTitle == null ? '' : #tripTitle.toLowerCase().trim())")
     public WeatherDto.PackingRecommendations getPackingRecommendations(Double lat, Double lon, String tripTitle) {
         lat = Math.round(lat * 100.0) / 100.0;
         lon = Math.round(lon * 100.0) / 100.0;
         String json = fetchForecastFromApi(lat, lon);
         WeatherDto.WeeklyForecast forecast = parseForecastFromJson(json, lat, lon);
-        return generatePackingList(forecast);
+        return generatePackingList(forecast, tripTitle);
     }
 
     public double[] geocodeCity(String query) {
@@ -154,11 +155,6 @@ public class WeatherService {
             if (v != null && !v.isBlank()) return v;
         }
         return "";
-    }
-
-    @CacheEvict(value = "weather", key = "T(Math).round(#lat * 100.0) / 100.0 + '_' + T(Math).round(#lon * 100.0) / 100.0")
-    public void evictWeatherCache(Double lat, Double lon) {
-        log.info("Weather cache evicted for lat={}, lon={}", lat, lon);
     }
 
     @Scheduled(cron = "0 0 */3 * * *")
@@ -347,7 +343,12 @@ public class WeatherService {
         }
     }
 
-    private WeatherDto.PackingRecommendations generatePackingList(WeatherDto.WeeklyForecast forecast) {
+    private WeatherDto.PackingRecommendations generatePackingList(WeatherDto.WeeklyForecast forecast, String tripTitle) {
+        return gigaChatService.generatePackingRecommendations(forecast, tripTitle)
+                .orElseGet(() -> generateRuleBasedPackingList(forecast));
+    }
+
+    private WeatherDto.PackingRecommendations generateRuleBasedPackingList(WeatherDto.WeeklyForecast forecast) {
         List<WeatherDto.DailyForecast> days = forecast.getDays();
         boolean hasRain = days.stream().anyMatch(WeatherDto.DailyForecast::isRainy);
         boolean hasCold = days.stream().anyMatch(WeatherDto.DailyForecast::isCold);
@@ -382,6 +383,7 @@ public class WeatherService {
                 .bestTimeToVisit(hasHot ? "Активности утром до 11:00 или вечером после 18:00"
                         : hasRain ? "Дождливые дни — для музеев и кафе"
                         : "Погода благоприятная весь день")
+                .recommendationSource("Локальные правила")
                 .build();
     }
 }

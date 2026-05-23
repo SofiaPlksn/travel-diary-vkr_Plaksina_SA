@@ -160,33 +160,6 @@ public class TripService {
                 .collect(Collectors.toList());
     }
 
-    public TripDto.UserStats getUserStats(Long userId) {
-        List<Trip> allTrips = tripRepository.findByUserIdOrderByStartDateDesc(userId, Pageable.unpaged()).getContent();
-
-        long totalMedia = allTrips.stream().mapToLong(t -> t.getMedia().size()).sum();
-        long totalPlaces = allTrips.stream().mapToLong(t -> t.getPlaces().size()).sum();
-        long totalJournalEntries = allTrips.stream().mapToLong(t -> t.getJournalEntries().size()).sum();
-        long totalTripDays = allTrips.stream().mapToLong(t -> {
-            if (t.getStartDate() != null && t.getEndDate() != null) {
-                return java.time.temporal.ChronoUnit.DAYS.between(t.getStartDate(), t.getEndDate()) + 1;
-            }
-            return 1L;
-        }).sum();
-
-        return TripDto.UserStats.builder()
-                .totalTrips(allTrips.size())
-                .completedTrips(allTrips.stream().filter(t -> t.getStatus() == Trip.Status.COMPLETED).count())
-                .plannedTrips(allTrips.stream().filter(t -> t.getStatus() == Trip.Status.PLANNED).count())
-                .activeTrips(allTrips.stream().filter(t -> t.getStatus() == Trip.Status.ACTIVE).count())
-                .countriesVisited(tripRepository.countDistinctCountriesByUserId(userId))
-                .citiesVisited(tripRepository.countDistinctCitiesByUserId(userId))
-                .totalMedia(totalMedia)
-                .totalPlaces(totalPlaces)
-                .totalTripDays(totalTripDays)
-                .totalJournalEntries(totalJournalEntries)
-                .build();
-    }
-
     private Set<Tag> resolveOrCreateTags(List<String> tagNames) {
         if (tagNames == null || tagNames.isEmpty()) return new HashSet<>();
 

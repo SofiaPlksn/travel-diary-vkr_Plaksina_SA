@@ -107,13 +107,6 @@ public class TripController {
         return ResponseEntity.ok(tripService.getMemoriesOnThisDay(user.getId()));
     }
 
-    @GetMapping("/stats")
-    public ResponseEntity<TripDto.UserStats> getStats(
-            @AuthenticationPrincipal User user
-    ) {
-        return ResponseEntity.ok(tripService.getUserStats(user.getId()));
-    }
-
     @Transactional(readOnly = true)
     @GetMapping("/{id}/pdf")
     public ResponseEntity<byte[]> downloadPdf(

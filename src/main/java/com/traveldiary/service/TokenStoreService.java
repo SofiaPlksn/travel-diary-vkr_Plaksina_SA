@@ -48,6 +48,11 @@ public class TokenStoreService {
         return Boolean.TRUE.equals(redisTemplate.hasKey("pwd-reset:email:" + email));
     }
 
+    public String getActivePasswordResetToken(String email) {
+        Object value = redisTemplate.opsForValue().get("pwd-reset:email:" + email);
+        return value != null ? value.toString() : null;
+    }
+
     public String createEmailConfirmToken(String email) {
         String token = UUID.randomUUID().toString();
         Duration ttl = Duration.ofSeconds(emailConfirmTtlSeconds);

@@ -39,10 +39,11 @@ public class SecurityConfig {
                         .csrfTokenRequestHandler(csrfHandler)
                         .ignoringRequestMatchers(
                                 "/api/auth/login",
-                                "/api/auth/register"
+                                "/api/auth/register",
+                                "/api/auth/forgot-password",
+                                "/api/auth/reset-password"
                         )
                 )
-
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/login",
@@ -58,6 +59,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/",
                                 "/index.html",
+                                "/reset-password.html",
+                                "/confirm-email.html",
                                 "/trips.html",
                                 "/memories.html",
                                 "/profile.html",

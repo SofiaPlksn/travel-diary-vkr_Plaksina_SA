@@ -34,7 +34,7 @@ public class AuthController {
             @Valid @RequestBody AuthDto.RegisterRequest request,
             HttpServletRequest httpRequest,
             HttpServletResponse httpResponse) {
-        AuthDto.AuthResponse response = authService.register(request);
+        AuthDto.AuthResponse response = authService.register(request, getBaseUrl(httpRequest));
 
         securityContextRepository.saveContext(SecurityContextHolder.getContext(), httpRequest, httpResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -53,6 +53,19 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> getCurrentUser(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(UserDto.from(user));
+    }
+
+    @PostMapping("/email-confirmation")
+    public ResponseEntity<Map<String, String>> createEmailConfirmationLink(
+            @AuthenticationPrincipal User user,
+            HttpServletRequest httpRequest) {
+        String confirmationLink = authService.createEmailConfirmationLink(user.getEmail(), getBaseUrl(httpRequest));
+        if (confirmationLink == null) {
+            return ResponseEntity.ok(Map.of("message", "Email уже подтверждён"));
+        }
+        return ResponseEntity.ok(Map.of(
+                "message", "Ссылка подтверждения создана",
+                "emailConfirmationLink", confirmationLink));
     }
 
     @PostMapping("/logout")
@@ -85,8 +98,14 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<Map<String, String>> forgotPassword(
-            @Valid @RequestBody AuthDto.ForgotPasswordRequest request) {
-        authService.forgotPassword(request.getEmail());
+            @Valid @RequestBody AuthDto.ForgotPasswordRequest request,
+            HttpServletRequest httpRequest) {
+        String resetLink = authService.forgotPassword(request.getEmail(), getBaseUrl(httpRequest));
+        if (resetLink != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Если email зарегистрирован — инструкции отправлены",
+                    "resetLink", resetLink));
+        }
         return ResponseEntity.ok(Map.of(
                 "message", "Если email зарегистрирован — инструкции отправлены"));
     }
@@ -102,5 +121,19 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> confirmEmail(@RequestParam String token) {
         authService.confirmEmail(token);
         return ResponseEntity.ok(Map.of("message", "Email успешно подтверждён"));
+    }
+
+    private String getBaseUrl(HttpServletRequest request) {
+        String forwardedProto = request.getHeader("X-Forwarded-Proto");
+        String forwardedHost = request.getHeader("X-Forwarded-Host");
+        if (forwardedHost != null && !forwardedHost.isBlank()) {
+            String proto = forwardedProto != null && !forwardedProto.isBlank()
+                    ? forwardedProto
+                    : request.getScheme();
+            return proto + "://" + forwardedHost;
+        }
+        boolean defaultPort = request.getServerPort() == 80 || request.getServerPort() == 443;
+        return request.getScheme() + "://" + request.getServerName()
+                + (defaultPort ? "" : ":" + request.getServerPort());
     }
 }

@@ -100,13 +100,6 @@ public class PlaceService {
         placeRepository.delete(place);
     }
 
-    public List<PlaceDto.Response> getNearbyPlaces(Long userId, Double lat, Double lng) {
-        return placeRepository.findNearby(userId, lat, lng, 0.05)
-                .stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-    }
-
     private Trip findTripAndCheckAccess(Long tripId, Long userId) {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new ResourceNotFoundException("Trip", tripId));

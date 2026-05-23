@@ -29,6 +29,11 @@ public class AuthService {
 
     @Transactional
     public AuthDto.AuthResponse register(AuthDto.RegisterRequest request) {
+        return register(request, "");
+    }
+
+    @Transactional
+    public AuthDto.AuthResponse register(AuthDto.RegisterRequest request, String baseUrl) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException(
                     "Пользователь с email " + request.getEmail() + " уже существует");
@@ -42,8 +47,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String confirmToken = tokenStoreService.createEmailConfirmToken(user.getEmail());
-        log.info("Email confirmation token generated for {}. Token (dev only): {}", user.getEmail(), confirmToken);
+        String confirmationLink = generateEmailConfirmationLink(user.getEmail(), baseUrl);
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -53,7 +57,7 @@ public class AuthService {
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
 
-        return new AuthDto.AuthResponse(UserDto.from(user));
+        return new AuthDto.AuthResponse(UserDto.from(user), confirmationLink);
     }
 
     public AuthDto.AuthResponse login(AuthDto.LoginRequest request) {
@@ -71,12 +75,31 @@ public class AuthService {
         return new AuthDto.AuthResponse(UserDto.from(user));
     }
 
-    public void forgotPassword(String email) {
-        boolean userExists = userRepository.existsByEmail(email.toLowerCase());
-        if (userExists && !tokenStoreService.hasActivePasswordResetToken(email.toLowerCase())) {
-            String token = tokenStoreService.createPasswordResetToken(email.toLowerCase());
-            log.info("Password reset requested for {}. Token (dev only): {}", email, token);
+    public String createEmailConfirmationLink(String email, String baseUrl) {
+        User user = userRepository.findByEmail(email.toLowerCase())
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
+        if (user.isEmailConfirmed()) {
+            return null;
         }
+        return generateEmailConfirmationLink(user.getEmail(), baseUrl);
+    }
+
+    public void forgotPassword(String email) {
+        forgotPassword(email, "");
+    }
+
+    public String forgotPassword(String email, String baseUrl) {
+        boolean userExists = userRepository.existsByEmail(email.toLowerCase());
+        if (userExists) {
+            String token = tokenStoreService.getActivePasswordResetToken(email.toLowerCase());
+            if (token == null) {
+                token = tokenStoreService.createPasswordResetToken(email.toLowerCase());
+            }
+            String resetLink = buildPublicLink(baseUrl, "/reset-password.html", token);
+            log.info("Password reset requested for {}. Link (dev only): {}", email, resetLink);
+            return resetLink;
+        }
+        return null;
     }
 
     @Transactional
@@ -108,5 +131,17 @@ public class AuthService {
         user.setEmailConfirmed(true);
         userRepository.save(user);
         log.info("Email confirmed for {}", email);
+    }
+
+    private String buildPublicLink(String baseUrl, String path, String token) {
+        String normalizedBaseUrl = baseUrl == null ? "" : baseUrl.replaceAll("/+$", "");
+        return normalizedBaseUrl + path + "?token=" + token;
+    }
+
+    private String generateEmailConfirmationLink(String email, String baseUrl) {
+        String confirmToken = tokenStoreService.createEmailConfirmToken(email);
+        String confirmationLink = buildPublicLink(baseUrl, "/confirm-email.html", confirmToken);
+        log.info("Email confirmation link generated for {}. Link (dev only): {}", email, confirmationLink);
+        return confirmationLink;
     }
 }

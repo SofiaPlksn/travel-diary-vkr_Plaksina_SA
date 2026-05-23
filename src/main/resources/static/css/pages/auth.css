@@ -175,6 +175,11 @@
   text-align: center;
 }
 /* Адаптив */
+.auth-error.success {
+  background: rgba(34, 197, 94, .12);
+  color: #15803d;
+  border-color: rgba(34, 197, 94, .25);
+}
 @media (max-width: 768px) {
   .auth-page {
     grid-template-columns: 1fr;

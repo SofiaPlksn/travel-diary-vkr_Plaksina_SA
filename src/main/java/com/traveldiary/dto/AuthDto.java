@@ -37,9 +37,15 @@ public class AuthDto {
     @Data
     public static class AuthResponse {
         private UserDto user;
+        private String emailConfirmationLink;
 
         public AuthResponse(UserDto user) {
             this.user = user;
+        }
+
+        public AuthResponse(UserDto user, String emailConfirmationLink) {
+            this.user = user;
+            this.emailConfirmationLink = emailConfirmationLink;
         }
     }
 

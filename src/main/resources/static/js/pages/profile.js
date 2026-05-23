@@ -28,6 +28,7 @@ function renderProfileHeader() {
   document.getElementById("profileName").textContent =
     user.name || "Пользователь";
   document.getElementById("profileEmail").textContent = user.email || "";
+  renderEmailStatus(user);
 
   if (user.createdAt) {
     const since = new Date(user.createdAt).toLocaleDateString("ru-RU", {
@@ -53,6 +54,58 @@ function renderProfileHeader() {
     const file = e.target.files[0];
     if (file) uploadAvatar(file);
   });
+}
+
+function renderEmailStatus(user) {
+  const statusEl = document.getElementById("profileEmailStatus");
+  if (!statusEl) return;
+  statusEl.replaceChildren();
+
+  if (user.emailConfirmed) {
+    statusEl.className = "profile-email-status text-sm confirmed";
+    statusEl.textContent = "Email подтверждён";
+    sessionStorage.removeItem("emailConfirmationLink");
+    return;
+  }
+
+  statusEl.className = "profile-email-status text-sm pending";
+  const text = document.createElement("span");
+  text.textContent = "Email не подтверждён";
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn btn-secondary btn-sm email-confirm-btn";
+  button.textContent = "Подтвердить почту";
+  button.addEventListener("click", () => confirmEmail(button));
+
+  statusEl.append(text, button);
+}
+
+async function confirmEmail(button) {
+  const confirmationLink = sessionStorage.getItem("emailConfirmationLink");
+  if (confirmationLink) {
+    window.location.href = confirmationLink;
+    return;
+  }
+
+  setLoading(button, true);
+  try {
+    const response = await api.post("/api/auth/email-confirmation", {});
+    if (response.emailConfirmationLink) {
+      sessionStorage.setItem("emailConfirmationLink", response.emailConfirmationLink);
+      window.location.href = response.emailConfirmationLink;
+      return;
+    }
+
+    const user = await api.get("/api/auth/me");
+    auth.updateUser(user);
+    renderProfileHeader();
+    showToast(response.message || "Email уже подтверждён", "success");
+  } catch (err) {
+    showToast("Не удалось получить ссылку подтверждения: " + err.message, "error");
+  } finally {
+    setLoading(button, false);
+  }
 }
 
 async function uploadAvatar(file) {

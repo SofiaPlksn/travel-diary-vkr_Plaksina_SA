@@ -1318,6 +1318,9 @@ function renderWeather(forecast, packing) {
   const cacheNote = forecast.fromCache
     ? '<span style="opacity:.6;font-size:12px"> (из кэша)</span>'
     : "";
+  const sourceNote = packing.recommendationSource
+    ? `<span style="display:inline-block;margin-left:.5rem;opacity:.65;font-size:12px">${escapeHtml(packing.recommendationSource)}</span>`
+    : "";
 
   const daysHtml = days
     .map(
@@ -1343,7 +1346,7 @@ function renderWeather(forecast, packing) {
   return `
     <div class="weather-widget">
       <div class="weather-widget__location">📍 ${escapeHtml(forecast.locationName)}${cacheNote}</div>
-      <div class="weather-widget__summary">${escapeHtml(packing.weatherSummary || "")}</div>
+      <div class="weather-widget__summary">${escapeHtml(packing.weatherSummary || "")}${sourceNote}</div>
       <div class="weather-days">${daysHtml}</div>
     </div>
     <h3 class="mb-4">🎒 Список вещей</h3>

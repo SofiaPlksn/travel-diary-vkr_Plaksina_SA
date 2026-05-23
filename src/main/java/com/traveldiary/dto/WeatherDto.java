@@ -51,6 +51,7 @@ public class WeatherDto {
         private List<String> accessories;
         private String weatherSummary;
         private String bestTimeToVisit;
+        private String recommendationSource;
     }
 
     @Data

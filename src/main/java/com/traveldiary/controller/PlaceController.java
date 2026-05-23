@@ -57,11 +57,4 @@ public class PlaceController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/api/places/nearby")
-    public ResponseEntity<List<PlaceDto.Response>> getNearby(
-            @RequestParam Double lat,
-            @RequestParam Double lng,
-            @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(placeService.getNearbyPlaces(user.getId(), lat, lng));
-    }
 }

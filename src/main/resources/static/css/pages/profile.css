@@ -66,6 +66,32 @@
   letter-spacing: -.01em;
 }
 /* Сетка метрик */
+.profile-email-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: 2px;
+  font-weight: var(--font-medium);
+}
+.profile-email-status.confirmed {
+  color: #15803d;
+}
+.profile-email-status.pending {
+  color: #dc2626;
+}
+.email-confirm-btn {
+  background: rgba(255, 255, 255, .92);
+  border-color: transparent;
+  box-shadow: none;
+  color: #1e293b;
+  line-height: 1.2;
+}
+.email-confirm-btn:hover {
+  background: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

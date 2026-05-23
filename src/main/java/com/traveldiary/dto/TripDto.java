@@ -100,18 +100,4 @@ public class TripDto {
         private Set<String> tags;
     }
 
-    @Data
-    @Builder
-    public static class UserStats {
-        private long totalTrips;
-        private long completedTrips;
-        private long plannedTrips;
-        private long activeTrips;
-        private long countriesVisited;
-        private long citiesVisited;
-        private long totalMedia;
-        private long totalPlaces;
-        private long totalTripDays;
-        private long totalJournalEntries;
-    }
 }

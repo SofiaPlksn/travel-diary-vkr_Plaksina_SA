@@ -82,6 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       auth.handleAuthResponse(response);
+      if (response.emailConfirmationLink) {
+        sessionStorage.setItem("emailConfirmationLink", response.emailConfirmationLink);
+      }
       window.location.href = "/trips.html";
     } catch (err) {
       showError("loginError", err.message || "Неверный email или пароль");
@@ -106,6 +109,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       auth.handleAuthResponse(response);
+      if (response.emailConfirmationLink) {
+        sessionStorage.setItem("emailConfirmationLink", response.emailConfirmationLink);
+      }
       window.location.href = "/trips.html";
     } catch (err) {
       showError("registerError", err.message || "Ошибка при регистрации");
@@ -220,8 +226,12 @@ document.addEventListener("DOMContentLoaded", () => {
       setLoading(btn, true);
 
       try {
-        await api.post("/api/auth/forgot-password", { email });
+        const response = await api.post("/api/auth/forgot-password", { email });
         closeForgotModal();
+        if (response.resetLink) {
+          window.location.href = response.resetLink;
+          return;
+        }
         // (router не подключён на странице логина, используем alert)
         alert("Инструкции отправлены на " + email);
       } catch {
